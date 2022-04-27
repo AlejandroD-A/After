@@ -46,4 +46,10 @@ export default class ContenedorFirebase {
       throw new Error(`Error al guardar: ${error}`)
     }
   }
+
+  async actualizar() {}
+
+  async borrar() {}
+
+  async borrarTodos() {}
 }
