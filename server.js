@@ -1,9 +1,11 @@
-import express from 'express'
+import express, { json, urlencoded } from 'express'
 import config from './config.js'
 import { carritoApi, productosApi } from './daos/index.js'
 
 const app = express()
 
+app.use(json())
+app.use(urlencoded({ extended: true }))
 const productosRouter = new express.Router()
 
 let admin = true
@@ -26,6 +28,7 @@ productosRouter.get('/:id', async (req, res) => {
 })
 
 productosRouter.post('/', soloAdmins, async (req, res) => {
+  console.log(req.body)
   res.json(await productosApi.guardar(req.body))
 })
 
@@ -36,6 +39,8 @@ productosRouter.put('/:id', soloAdmins, async (req, res) => {
 productosRouter.delete('/:id', soloAdmins, async (req, res) => {
   res.json(await productosApi.borrar(req.params.id))
 })
+
+app.use('/api/productos', productosRouter)
 
 const PORT = config.port
 

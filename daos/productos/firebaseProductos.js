@@ -1,11 +1,7 @@
-import ContenedorFirebase from '../../contenedores/ContenedorFirebase'
+import ContenedorFirebase from '../../contenedores/ContenedorFirebase.js'
 
 export default class FirebaseProductos extends ContenedorFirebase {
   constructor() {
     super('productos')
-  }
-
-  listarAll() {
-    super.query()
   }
 }

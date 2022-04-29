@@ -1,19 +1,21 @@
 import admin from 'firebase-admin'
-import { service_account } from '../config'
+
+import config from '../config.js'
 
 admin.initializeApp({
-  credential: admin.credential.cert(service_account)
+  credential: admin.credential.cert(config.firebase),
+  databaseURL: ''
 })
 
 export default class ContenedorFirebase {
   constructor(collection) {
-    this.db = admin.firestore
-    this.query = db.collection(collection)
+    this.db = admin.firestore()
+    this.query = this.db.collection(collection)
   }
 
   async listar(id) {
     try {
-      const doc = await this.coleccion.doc(id).get()
+      const doc = await this.query.doc(id).get()
       if (!doc.exists) {
         throw new Error(`Error al listar por id: no se encontró`)
       } else {
@@ -28,7 +30,7 @@ export default class ContenedorFirebase {
   async listarAll() {
     try {
       const result = []
-      const snapshot = await this.coleccion.get()
+      const snapshot = await this.query.get()
       snapshot.forEach((doc) => {
         result.push({ id: doc.id, ...doc.data() })
       })
@@ -40,7 +42,7 @@ export default class ContenedorFirebase {
 
   async guardar(nuevoElem) {
     try {
-      const guardado = await this.coleccion.add(nuevoElem)
+      const guardado = await this.query.add(nuevoElem)
       return { ...nuevoElem, id: guardado.id }
     } catch (error) {
       throw new Error(`Error al guardar: ${error}`)
